@@ -66,23 +66,12 @@ def detect_emotion_from_image(image_path):
             emotion_scores = result[0]['emotion']
         else:
             emotion = result['dominant_emotion']
-            emotion_scores = result['emotion']       
+            emotional_scores = result['emotion']
         print(f"\nDominant Emotion: {emotion}")
         print("\nEmotion Scores:")
         for emo, score in emotion_scores.items():
-            print(f"  {emo.capitalize()}: {score:.2f}%")
-        cv2.putText(img, f"Emotion: {emotion}", (10, 30), 
-                   cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)        
-        cv2.imshow('Emotion Detection Result', img)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()       
-    except Exception as e:
-        print(f"Error analyzing image: {e}")
-def detect_multiple_emotions(image_path):
-    try:
-        img = cv2.imread(image_path)       
-        if img is None:
-            print(f"Error: Could not load image from {image_path}")
+            if img is None:
+              print(f"Error: Could not load image from {image_path}")
             return
         face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -92,7 +81,7 @@ def detect_multiple_emotions(image_path):
             face_roi = img[y:y+h, x:x+w]            
             try:
                 result = DeepFace.analyze(face_roi, actions=['emotion'], enforce_detection=False)               
-                if isinstance(result, list):
+                if isinstance(result,list):
                     emotion = result[0]['dominant_emotion']
                 else:
                     emotion = result['dominant_emotion']
@@ -109,7 +98,7 @@ def detect_multiple_emotions(image_path):
         print(f"Error: {e}")
 def detect_emotion_with_fer():
     from fer import FER
-    emotion_detector = FER(mtcnn=True)
+    emotion_detector = FER()
     cap = cv2.VideoCapture(0)    
     if not cap.isOpened():
         print("Error: Could not open webcam")
